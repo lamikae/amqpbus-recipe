@@ -2,3 +2,4 @@ amqplib
 carrot
 jsonrpclib
 *.pyc
+*.zip
