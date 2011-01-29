@@ -1,4 +1,4 @@
-Read the blog post at <a href="http://blogger-mikael.blogspot.com/2011/01/recipe-of-request-response-over-amqp.html">blogspot</a>.
+Read the blog post at http://blogger-mikael.blogspot.com/2011/01/recipe-of-request-response-over-amqp.html
 
    This is a recipe to setup synchronized messaging over AMQP. The recipe
    source zip file contains an implementation of a Python backend broker.
