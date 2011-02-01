@@ -34,23 +34,21 @@ class ExampleBroker(IMessageBroker):
 
 if __name__ == '__main__':
     """Starts the AMQP consumer loop."""
+    # setup logger
     console = logging.StreamHandler()
     log = logging.getLogger()
     log.addHandler(console)
     log.setLevel(logging.DEBUG)
 
+    # initialize broker and bind stop signals
     broker = ExampleBroker()
-
-    def stop(*args):
-        """Stops the consumer loop."""
-        logging.debug("stop signal called")
-        broker.stop()
-
     for sgnl in [SIGABRT, SIGINT, SIGQUIT, SIGTERM]:
-        signal(sgnl, stop)
+        signal(sgnl, broker.stop)
 
+    # start broker thread while main thread sleeps waiting for broker to stop
     broker.start()
     while not broker.stopped:
         sleep(10)
 
+    # clean exit
     sys.exit(0)
