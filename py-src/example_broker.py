@@ -47,6 +47,7 @@ if __name__ == '__main__':
 
     # start broker thread while main thread sleeps waiting for broker to stop
     broker.start()
+    sleep(1)
     while not broker.stopped:
         sleep(10)
 

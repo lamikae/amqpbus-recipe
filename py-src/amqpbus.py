@@ -168,8 +168,8 @@ class IMessageBroker(Consumer, Thread):
         return self._stop.isSet()
 
     def run(self):
-        logging.info('%s entering AMQP consumer loop' % self.__unicode__())
         self._stop.clear() # started
+        logging.info('%s entering AMQP consumer loop' % self.__unicode__())
         it = self.iterconsume()
         while not self.stopped:
             try:
@@ -184,7 +184,6 @@ class IMessageBroker(Consumer, Thread):
                 unless the service stop flag is set.
                 """
                 if self.stopped:
-                    logging.debug("goodbye AMQP")
                     break
 
                 # else reconnect
@@ -195,9 +194,11 @@ class IMessageBroker(Consumer, Thread):
                 it = self.iterconsume()
                 continue
             except StopIteration:
-                """Happens at cancel() and on lost connection, if IOError exception handler cannot restore consumption loop."""
-                logging.error('%s %s' % (self.__unicode__(), sys.exc_info()[1]))
-                logging.debug('break out of iterconsume')
+                """Happens at cancel() and on lost connection, 
+                if IOError exception handler could not restore consumption loop."""
+                logging.debug('%s %s' % (self.__unicode__(), sys.exc_info()[1]))
+                logging.info('%s break out of consumer loop' % self.__unicode__())
+                self._stop.set()
                 break
             except:
                 logging.error("BUG")
@@ -209,8 +210,7 @@ class IMessageBroker(Consumer, Thread):
         except:
             logging.debug('%s %s' % (self.__unicode__(), sys.exc_info()[1]))
 
-        logging.info('%s exiting' % self.__unicode__())
-        self._stop.set()
+        logging.info('%s thread exiting' % self.__unicode__())
         exit()
 
     def stop(self,*args):
